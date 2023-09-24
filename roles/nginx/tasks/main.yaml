@@ -1,8 +1,8 @@
-- name: Install package 'nginx'
+- name: Install Nginx
   ansible.builtin.apt:
     name: nginx
 
-- name: Start service 'nginx'
+- name: Start service
   ansible.builtin.service:
     name: nginx
     state: started
