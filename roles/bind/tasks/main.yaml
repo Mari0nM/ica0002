@@ -1,0 +1,25 @@
+- name: Install Bind9
+  ansible.builtin.apt:
+    name: bind9
+
+- name: Start service
+  ansible.builtin.service:
+    name: bind9
+    state: started
+    enabled: true
+
+- name: Place configuration file 'db.verity.co'
+  ansible.builtin.template:
+    src: db.verity.co.j2
+    dest: /var/lib/bind/db.verity.co
+# TODO: fix notify
+  notify: Run rndc reload
+
+- name: Place configuration file 'named.conf.options'
+  ansible.builtin.template:
+    src: named.conf.{{ item }}.j2
+    dest: /etc/bind/named.conf.{{ item }}
+  loop:
+    - options
+    - local
+  notify: Run rndc reconfig

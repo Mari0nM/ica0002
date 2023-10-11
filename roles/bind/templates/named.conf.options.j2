@@ -1,0 +1,15 @@
+options {
+    directory "/var/lib/bind";
+
+    forwarders {
+        {% for forwarder in forwarders %}
+            {{ forwarder }};
+        {% endfor %}
+    };
+
+    allow-query {
+        {{ localhost }};
+        {{ local_network }};
+    };
+    dnssec-validation no;
+};

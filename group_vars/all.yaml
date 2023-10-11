@@ -1,4 +1,4 @@
-mysql_host: 192.168.43.50
+mysql_host: "{{ hostvars['Mari0nM-2']['ansible_default_ipv4']['address'] }}"
 mysql_database: agama
 mysql_user: agama
 mysql_password: !vault |
@@ -9,3 +9,12 @@ mysql_password: !vault |
           3935363934633535620a383030656161393738343438306339366163343932613866643033363537
           31316465643264376631393062356638626262616635663230373363316338323537343035613633
           3639393639656166356364393132396532323530353832653963
+
+forwarders:
+  - 1.1.1.1
+  - 8.8.8.8
+  - 9.9.9.9
+
+local_network: 192.168.42.0/23
+localhost: 127.0.0.0/8
+domain: verity.co

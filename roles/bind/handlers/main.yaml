@@ -1,0 +1,5 @@
+- name: Run rndc reload
+  ansible.builtin.command: rndc reload
+
+- name: Run rndc reconfig
+  ansible.builtin.command: rndc reconfig
