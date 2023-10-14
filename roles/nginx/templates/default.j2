@@ -1,0 +1,12 @@
+server {
+    listen 80 default_server;
+
+    location / {
+        uwsgi_pass localhost:5000;
+        include uwsgi_params;
+    }
+
+    location /prometheus {
+        proxy_pass http://{{ groups['prometheus_servers'][0] }}:9090;
+    }
+}

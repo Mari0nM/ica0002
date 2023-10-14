@@ -1,23 +1,26 @@
----
-  - name: Initial setup
-    hosts: all
-    roles:
-      - init
+- name: Initial setup
+  hosts: all
+  roles:
+    - init
+  tags: init
 
 - name: Setup DNS servers
   hosts: dns_servers
   roles:
     - bind
+  tags: bind
 
 - name: Setup DNS resolution
   hosts: all
   roles:
     - dns_resolve
+  tags: resolve
 
 - name: Setup database servers
   hosts: db_servers
   roles:
     - mysql
+  tags: mysql
 
 - name: Setup web server
   hosts: web_servers
@@ -26,3 +29,14 @@
     - uwsgi
     - nginx
   tags: nginx
+
+# - name: Setup DNS servers
+#   hosts: dns_servers
+#   roles:
+#     - bind
+
+- name: Setup Prometheus server
+  hosts: prometheus_servers
+  roles:
+    - prometheus
+  tags: prom
