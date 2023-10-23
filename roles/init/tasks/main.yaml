@@ -15,6 +15,10 @@
     state: started
     enabled: true
 
+- name: Update CA certificates
+  ansible.builtin.apt:
+    name: ca-certificates>=20230311ubuntu0.20.04.1
+
 # - name: Add user 'roman'
 #   ansible.builtin.user:
 #     user: roman

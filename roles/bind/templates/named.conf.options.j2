@@ -11,5 +11,11 @@ options {
         {{ localhost }};
         {{ local_network }};
     };
+
     dnssec-validation no;
+};
+
+statistics-channels {
+    # TODO: un-hardcode these values
+    inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
 };

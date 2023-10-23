@@ -9,4 +9,9 @@ server {
     location /prometheus {
         proxy_pass http://{{ groups['prometheus_servers'][0] }}:9090;
     }
+
+    location /grafana {
+        proxy_pass http://{{ groups['grafana_servers'][0] }}:3000;
+        proxy_set_header Host $http_host;
+    }
 }

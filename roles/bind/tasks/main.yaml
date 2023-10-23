@@ -8,14 +8,14 @@
     state: started
     enabled: true
 
-- name: Place configuration file 'db.verity.co'
+- name: Place zone file
   ansible.builtin.template:
     src: db.verity.co.j2
     dest: /var/lib/bind/db.verity.co
 # TODO: fix notify
   notify: Run rndc reload
 
-- name: Place configuration file 'named.conf.options'
+- name: Place configuration files
   ansible.builtin.template:
     src: named.conf.{{ item }}.j2
     dest: /etc/bind/named.conf.{{ item }}

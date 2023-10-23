@@ -9,9 +9,39 @@ scrape_configs:
     metrics_path: /prometheus/metrics #defaults to '/metrics'
     static_configs:
       - targets: ['localhost:9090']
+
   - job_name: linux
     static_configs:
       - targets: 
         {% for vm in groups['all'] %}
+# TODO: use variabled instead of port numbers
         - {{ vm }}:9100
+        {% endfor %}
+
+  - job_name: bind9
+    static_configs:
+      - targets: 
+        {% for vm in groups['dns_servers'] %}
+        - {{ vm }}:{{ bind_exporter_port }}
+        {% endfor %}
+
+  - job_name: mysql
+    static_configs:
+      - targets:
+        {% for vm in groups['db_servers'] %}
+        - {{ vm }}:{{ mysql_exporter_port }}
+        {% endfor %}
+
+  - job_name: nginx
+    static_configs:
+      - targets:
+        {% for vm in groups['web_servers'] %}
+        - {{ vm }}:{{ nginx_exporter_port }}
+        {% endfor %}
+  
+  - job_name: influxdb
+    static_configs:
+      - targets:
+        {% for vm in groups['influxdb_servers'] %}
+        - {{ vm }}:{{ influxdb_port }}
         {% endfor %}

@@ -12,3 +12,7 @@ Mari0nM-2
 
 [prometheus_servers]
 Mari0nM-2
+
+[grafana_servers]
+Mari0nM-1
+

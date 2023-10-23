@@ -1,0 +1,23 @@
+- name: Install Nginx exporter
+  ansible.builtin.apt:
+    name: prometheus-nginx-exporter
+
+- name: Place exporter file
+  ansible.builtin.template:
+    src: exporter.j2
+    dest: /etc/nginx/sites-enabled/exporter
+    owner: prometheus
+    mode: 644
+  notify: Restart nginx
+
+- name: Wait for nginx stub status server to be up
+  ansible.builtin.wait_for:
+    port: 8080
+    delay: 1
+    timeout: 6
+
+- name: Start service
+  ansible.builtin.service:
+    name: prometheus-nginx-exporter
+    state: started
+    enabled: true

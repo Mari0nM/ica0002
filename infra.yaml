@@ -1,42 +1,53 @@
 - name: Initial setup
   hosts: all
+  become: true
   roles:
     - init
-  tags: init
+  tags: i
 
-- name: Setup DNS servers
+- name: Setup DNS servers and exporters
   hosts: dns_servers
+  become: true
   roles:
     - bind
-  tags: bind
+    - bind_exporter
+  tags: b
 
 - name: Setup DNS resolution
   hosts: all
+  become: true
   roles:
     - dns_resolve
-  tags: resolve
+  tags: dns
 
-- name: Setup database servers
+- name: Setup database servers and exporters
   hosts: db_servers
+  become: true
   roles:
     - mysql
-  tags: mysql
+    - mysql_exporter
+  tags: db
 
-- name: Setup web server
+- name: Setup Prometheus server
+  hosts: prometheus_servers
+  become: true
+  roles:
+    - prometheus
+  tags: p
+
+- name: Setup Grafana
+  hosts: grafana_servers
+  become: true
+  roles:
+    - grafana
+  tags: g
+
+- name: Setup web server and exporters
   hosts: web_servers
+  become: true
   roles:
     - agama
     - uwsgi
     - nginx
-  tags: nginx
-
-# - name: Setup DNS servers
-#   hosts: dns_servers
-#   roles:
-#     - bind
-
-- name: Setup Prometheus server
-  hosts: prometheus_servers
-  roles:
-    - prometheus
-  tags: prom
+    - nginx_exporter
+  tags: w
