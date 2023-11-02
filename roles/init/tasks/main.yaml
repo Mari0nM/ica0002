@@ -19,6 +19,23 @@
   ansible.builtin.apt:
     name: ca-certificates>=20230311ubuntu0.20.04.1
 
+- name: Install rsyslog
+  ansible.builtin.apt:
+    name: rsyslog
+    state: latest
+
+- name: Place rsyslog conf file
+  ansible.builtin.template:
+    src: telegraf.conf.j2
+    dest: /etc/rsyslog.d/telegraf.conf
+  notify: Restart Rsyslog
+
+- name: Start rsyslog
+  ansible.builtin.service:
+    name: rsyslog
+    state: started
+    enabled: yes
+
 # - name: Add user 'roman'
 #   ansible.builtin.user:
 #     user: roman

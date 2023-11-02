@@ -8,6 +8,9 @@
     dest: /etc/nginx/sites-enabled/default
   notify: Restart nginx
 
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: Start service
   ansible.builtin.service:
     name: nginx

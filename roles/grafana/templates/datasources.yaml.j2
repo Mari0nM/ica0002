@@ -1,13 +1,28 @@
-# config file version
 apiVersion: 1
 
 datasources:
- - name: prometheus
+ - name: Prometheus
    type: prometheus
-#   orgId: 1
    url: http://Mari0nM-2:9090/prometheus
    password:
    user:
    database:
    isDefault: true
+   access: proxy
+   editable: true
+
+ - name: InfluxDB-pinger
+   type: influxdb
+   url: http://{{ groups['influxdb_servers'][0] }}:{{ influxdb_api_port }}
+   password:
+   user:
+   database: latency
+   editable: true
+
+ - name: InfluxDB-telegraf
+   type: influxdb
+   url: http://{{ groups['influxdb_servers'][0] }}:{{ influxdb_api_port }}
+   password:
+   user:
+   database: telegraf
    editable: true

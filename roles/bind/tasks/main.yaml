@@ -12,7 +12,6 @@
   ansible.builtin.template:
     src: db.verity.co.j2
     dest: /var/lib/bind/db.verity.co
-# TODO: fix notify
   notify: Run rndc reload
 
 - name: Place configuration files

@@ -43,5 +43,5 @@ scrape_configs:
     static_configs:
       - targets:
         {% for vm in groups['influxdb_servers'] %}
-        - {{ vm }}:{{ influxdb_port }}
+        - {{ vm }}:{{ influxdb_metrics_port }}
         {% endfor %}

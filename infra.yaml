@@ -42,6 +42,14 @@
     - grafana
   tags: g
 
+- name: Setup InfluxDB
+  hosts: influxdb_servers
+  become: true
+  roles:
+    - influxdb
+    - influxdb_exporter
+  tags: influx
+
 - name: Setup web server and exporters
   hosts: web_servers
   become: true
@@ -51,3 +59,11 @@
     - nginx
     - nginx_exporter
   tags: w
+
+- name: Setup pinger
+  hosts: pinger_servers
+  become: true
+  roles:
+    - pinger
+  tags:
+    - pinger

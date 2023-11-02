@@ -14,35 +14,55 @@
   ansible.builtin.template:
     src: grafana.ini.j2
     dest: /etc/grafana/grafana.ini
+    owner: grafana
+    mode: "0600"
+  no_log: true
   notify: Restart grafana
+
+- name: Create directories for grafana
+  ansible.builtin.file:
+    path: '{{ item }}'
+    recurse: true
+    state: directory
+    owner: grafana
+    mode: "0700"
+  loop:
+    - /etc/grafana/provisioning/dashboards
+    - /etc/grafana/provisioning/datasources
+  notify: Restart grafana
+
+- name: Copy datasources.yaml
+  ansible.builtin.template:
+    src: datasources.yaml.j2
+    dest: /etc/grafana/provisioning/datasources/datasources.yaml
+    owner: grafana
+    mode: "0600"
+  notify: Restart grafana
+
+- name: Copy dashboards.yaml
+  ansible.builtin.template:
+    src: dashboards.yaml.j2
+    dest: /etc/grafana/provisioning/dashboards/dashboards.yaml
+    owner: grafana
+    mode: "0600"
+  notify: Restart grafana
+
+- name: Place dashboard definition files
+  ansible.builtin.copy:
+    src: '{{ item }}.json'
+    dest: '/etc/grafana/provisioning/dashboards/{{ item }}.json'
+    owner: grafana
+    mode: "0600"
+  loop:
+    - main
+    - syslog
+  notify: Restart grafana
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Start grafana
   ansible.builtin.service:
     name: grafana-server
     state: started
     enabled: true
-
-- name: Create directories for grafana
-  file:
-    path: '{{ item }}'
-    recurse: true
-    state: directory
-  loop:
-    - /opt/grafana/provisioning/dashboards
-    - /opt/grafana/provisioning/datasources
-
-- name: Copy datasources.yaml
-  ansible.builtin.template:
-    src: datasources.yaml.j2
-    dest: /opt/grafana/provisioning/datasources/datasources.yaml
-  notify: Restart grafana
-
-- name: Copy dashboards.yaml
-  ansible.builtin.template:
-    src: dashboards.yaml.j2
-    dest: /opt/grafana/provisioning/dashboards/dashboards.yaml
-
-- name: Copy grafana dashboards
-  copy:
-    src: main.json
-    dest: "/opt/grafana/provisioning/dashboards/main.json"

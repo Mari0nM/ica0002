@@ -16,3 +16,8 @@ Mari0nM-2
 [grafana_servers]
 Mari0nM-1
 
+[influxdb_servers]
+Mari0nM-1
+
+[pinger_servers]
+Mari0nM-1
