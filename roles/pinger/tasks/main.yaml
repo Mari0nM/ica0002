@@ -10,12 +10,15 @@
   ansible.builtin.file:
     path: /etc/pinger
     state: directory
-    mode: '0777'
+    owner: pinger
+    mode: '0700'
 
 - name: Copy pinger service file
   ansible.builtin.copy:
     src: pinger.service
     dest: /etc/systemd/system/pinger.service
+    owner: pinger
+    mode: '0600'
   no_log: true
   notify:
     - Reload daemons
@@ -36,6 +39,8 @@
   ansible.builtin.template:
     src: pinger.conf.j2
     dest: /etc/pinger/pinger.conf
+    owner: pinger
+    mode: '0600'
   notify:
     - Reload daemons
     - Restart pinger

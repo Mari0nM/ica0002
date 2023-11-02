@@ -17,6 +17,8 @@
   ansible.builtin.copy:
     src: influxdb.conf
     dest: /etc/influxdb/influxdb.conf
+    owner: influxdb
+    mode: '0600'
   notify: Restart influxdb
 
 - name: Copy telegraf config file

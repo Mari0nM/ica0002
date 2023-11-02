@@ -1,5 +1,5 @@
-- name: Run rndc reload
+- name: Run rndc reload # noqa: no-changed-when
   ansible.builtin.command: rndc reload
 
-- name: Run rndc reconfig
+- name: Run rndc reconfig # noqa: no-changed-when
   ansible.builtin.command: rndc reconfig

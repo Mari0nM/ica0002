@@ -1,5 +1,5 @@
-- name: Reload systemd
-  shell: systemctl daemon-reload
+- name: Reload systemd # noqa: command-instead-of-module command-instead-of-shell no-changed-when
+  ansible.builtin.shell: systemctl daemon-reload
 
 - name: Restart prometheus-influxdb
   ansible.builtin.service:

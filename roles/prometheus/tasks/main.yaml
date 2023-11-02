@@ -6,6 +6,8 @@
   ansible.builtin.template:
     src: prometheus.j2
     dest: /etc/default/prometheus
+    owner: prometheus
+    mode: "0600"
   notify: Restart prometheus
 
 - name: Place yml configuration file
@@ -13,6 +15,7 @@
     src: prometheus.yml.j2
     dest: /etc/prometheus/prometheus.yml
     owner: prometheus
+    mode: "0600"
   notify: Restart prometheus
 
 - name: Start service

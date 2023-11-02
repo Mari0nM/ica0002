@@ -1,6 +1,3 @@
-# - name: Ansible ping module
-#   ansible.builtin.ping:
-
 - name: Update APT cache
   ansible.builtin.apt:
     cache_valid_time: 86400
@@ -22,19 +19,20 @@
 - name: Install rsyslog
   ansible.builtin.apt:
     name: rsyslog
-    state: latest
 
 - name: Place rsyslog conf file
   ansible.builtin.template:
     src: telegraf.conf.j2
     dest: /etc/rsyslog.d/telegraf.conf
+    owner: root
+    mode: '0444'
   notify: Restart Rsyslog
 
 - name: Start rsyslog
   ansible.builtin.service:
     name: rsyslog
     state: started
-    enabled: yes
+    enabled: true
 
 # - name: Add user 'roman'
 #   ansible.builtin.user:

@@ -12,12 +12,16 @@
   ansible.builtin.template:
     src: db.verity.co.j2
     dest: /var/lib/bind/db.verity.co
+    owner: bind
+    mode: '0600'
   notify: Run rndc reload
 
 - name: Place configuration files
   ansible.builtin.template:
     src: named.conf.{{ item }}.j2
     dest: /etc/bind/named.conf.{{ item }}
+    owner: bind
+    mode: '0600'
   loop:
     - options
     - local

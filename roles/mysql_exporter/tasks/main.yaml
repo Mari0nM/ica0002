@@ -3,7 +3,6 @@
     src: my.cnf.j2
     dest: /var/lib/prometheus/.my.cnf
     owner: prometheus
-    group: prometheus
     mode: "0400"
   notify: Restart mysql exporter
   no_log: true
@@ -13,7 +12,7 @@
     name: prometheus-mysqld-exporter
 
 - name: Create mysql user for exporter
-  mysql_user:
+  community.mysql.mysql_user:
     name: exporter
     password: "{{ mysql_exporter_password }}"
     priv: "*.*:PROCESS,REPLICATION CLIENT,SELECT"
