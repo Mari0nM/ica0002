@@ -63,3 +63,6 @@ influxdb_metrics_port: 9424
 influxdb_api_port: 8086
 
 influx_database_name: latency
+
+backup_server_ip: 192.168.42.132
+backup_server_public_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEu6pFFWyuRrl4WGFPQGElYN9txwTGm2wSntcpVAaN90
