@@ -28,6 +28,9 @@
     mode: '0444'
   notify: Restart Rsyslog
 
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: Start rsyslog
   ansible.builtin.service:
     name: rsyslog
@@ -49,7 +52,12 @@
     state: directory
     owner: backup
     group: backup
-    mode: '0744'
+    mode: '0700'
+
+- name: Install duplicity
+  ansible.builtin.apt:
+    name: duplicity
+    state: present
 
 - name: Upload /home/backup/.ssh/known_hosts
   ansible.builtin.template:

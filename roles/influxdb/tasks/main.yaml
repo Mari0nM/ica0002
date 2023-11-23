@@ -28,6 +28,20 @@
     mode: "0644"
   notify: Restart telegraf
 
+- name: Create a backup directory
+  ansible.builtin.file:
+    path: /home/backup/influxdb
+    state: directory
+    owner: backup
+    mode: '0700'
+
+- name: Place InfluxDB backup cron file
+  ansible.builtin.template:
+    src: influxdb-backup.j2
+    dest: /etc/cron.d/influxdb-backup
+    owner: root
+    mode: '0644'
+
 - name: Start service influxdb
   ansible.builtin.service:
     name: influxdb
