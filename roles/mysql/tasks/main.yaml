@@ -7,17 +7,23 @@
     name: python3-pymysql
 
 - name: Place configuration file
-  ansible.builtin.copy:
-    src: override.cnf
+  ansible.builtin.template:
+    src: override.cnf.j2
     dest: /etc/mysql/mysql.conf.d/override.cnf
     owner: mysql
     mode: '0644'
   notify: Restart MySQL
 
-- name: Create database
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Create Agama database
   community.mysql.mysql_db:
     name: '{{ mysql_database }}'
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  notify:
+    - Reset MySQL source
+    - Reset MySQL replica
 
 - name: Add user
   community.mysql.mysql_user:
@@ -34,7 +40,7 @@
     owner: backup
     mode: '0700'
 
-- name: Place my.cnf
+- name: Place .my.cnf
   ansible.builtin.template:
     src: .my.cnf.j2
     dest: /home/backup/.my.cnf
@@ -50,6 +56,7 @@
     priv:
       '*.*': 'LOCK TABLES,SELECT'
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
 
 - name: Place MySQL backup cron file
   ansible.builtin.template:
@@ -57,6 +64,25 @@
     dest: /etc/cron.d/mysql-backup
     owner: root
     mode: '0644'
+
+- name: Create replica MySQL user
+  community.mysql.mysql_user:
+    name: "{{ mysql_replica_user }}"
+    password: "{{ mysql_replica_password }}"
+    host: "%"
+    priv: "*.*:REPLICATION SLAVE"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
+
+- name: Set replicas to read-only
+  community.mysql.mysql_variables:
+    variable: read_only
+    value: "{{ 'OFF' if inventory_hostname == mysql_master_hostname else 'ON' }}"
+    mode: persist
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  notify:
+    - Reset MySQL source
+    - Reset MySQL replica
 
 - name: Start service
   ansible.builtin.service:

@@ -55,6 +55,7 @@
     mode: "0755"
   loop:
     - main
+    - mysql
     - syslog
   notify: Restart grafana
 

@@ -2,6 +2,7 @@ Mari0nM-1 ansible_host=193.40.156.67 ansible_port=39122 ansible_user=ubuntu
 Mari0nM-2 ansible_host=193.40.156.67 ansible_port=39722 ansible_user=ubuntu
 
 [db_servers]
+Mari0nM-1
 Mari0nM-2
 
 [web_servers]

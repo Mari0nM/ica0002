@@ -18,6 +18,18 @@
     priv: "*.*:PROCESS,REPLICATION CLIENT,SELECT"
     login_unix_socket: /var/run/mysqld/mysqld.sock
 
+- name: Place Prometheus args file
+  ansible.builtin.copy:
+    src: prometheus-mysqld-exporter
+    dest: /etc/default/prometheus-mysqld-exporter
+    owner: root
+    mode: "0644"
+  notify:
+    - Restart mysql exporter
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: Start service
   ansible.builtin.service:
     name: prometheus-mysqld-exporter
