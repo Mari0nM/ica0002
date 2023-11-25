@@ -1,23 +1,32 @@
-- name: Add user 'agama'
-  ansible.builtin.user:
-    user: agama
-
-- name: Create application directory
+- name: Create build directory
   ansible.builtin.file:
     path: /opt/agama
     state: directory
-    owner: agama
+    owner: root
     mode: '0700'
 
-- name: Install dependencies
-  ansible.builtin.apt:
-    name:
-      - python3-flask-sqlalchemy
-      - python3-pymysql
-
-- name: Fetch and install application
+- name: Fetch application source
   ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/hudolejev/agama/6b167d27bf2cc8786d4c54fd6cb0d9fabfb3918b/agama.py
-    dest: /opt/agama/agama.py
-    owner: agama
+    url: 'https://raw.githubusercontent.com/hudolejev/agama/6b167d27bf2cc8786d4c54fd6cb0d9fabfb3918b/{{ item }}'
+    dest: '/opt/agama/{{ item }}'
+    owner: root
     mode: '0700'
+  loop:
+    - agama.py
+    - Dockerfile
+
+- name: Build Agama container
+  community.docker.docker_image:
+    name: agama
+    source: build
+    build:
+      path: /opt/agama
+
+- name: Start Agama container
+  community.docker.docker_container:
+    name: agama
+    image: agama
+    published_ports: '{{ agama_port }}:8000'
+    env:
+      AGAMA_DATABASE_URI: mysql+pymysql://{{ mysql_user }}:{{ mysql_password }}@{{ mysql_master_host }}/{{ mysql_database }}
+  no_log: true

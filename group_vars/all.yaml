@@ -1,7 +1,6 @@
 domain_name: verity.co
 
-mysql_master_hostname: Mari0nM-2
-mysql_host: "{{ hostvars[mysql_master_hostname]['ansible_default_ipv4']['address'] }}"
+mysql_master_hostname: 'Mari0nM-2'
 mysql_master_host: "{{ hostvars[mysql_master_hostname]['ansible_default_ipv4']['address'] }}"
 
 mysql_backup_user: backup
@@ -82,12 +81,15 @@ domain: verity.co
 public_ip: 193.40.156.67
 public_port: groups['web_servers']
 
+agama_port: 8001
+prometheus_port: 9090
 node_exporter_port: 9100
 bind_exporter_port: 9119
 nginx_exporter_port: 9113
 mysql_exporter_port: 9104
 influxdb_metrics_port: 9424
 influxdb_api_port: 8086
+grafana_port: 3001
 
 influx_database_name: latency
 

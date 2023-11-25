@@ -42,9 +42,9 @@ Verity will use the following Service Level Objectives (SLOs) to measure the per
 
 ## Backup Coverage
 In case of disaster, recovery from backups will be done only on MySQL and InfluxDB services.
-1.  **MySQL database**: Verity will backup the entire MySQL database, including all tables, stored procedures, and functions. Full backups are made every Friday at 20:00 UTC and incremental backups are made every day at 20:30 UTC.
+1.  **MySQL database**: Verity will backup the entire MySQL database, including all tables, stored procedures, and functions. Full backups are made every Friday at 20:30 UTC and incremental backups are made every day at 20:00 UTC.
 
-2.  **InfluxDB**: Verity will backup the entire InfluxDB database, including all time series data, measurements, and retention policies. Full backups are made every Friday at 20:00 UTC and incremental backups are made every day at 20:30 UTC.
+2.  **InfluxDB**: Verity will backup the entire InfluxDB database, including all time series data, measurements, and retention policies. Full backups are made every Friday at 20:30 UTC and incremental backups are made every day at 20:00 UTC.
 
 3.  **Ansible Repository**: Verity will backup the entire Ansible repository, including all playbooks, roles, and variables.
 

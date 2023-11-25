@@ -39,6 +39,7 @@
   hosts: grafana_servers
   become: true
   roles:
+    - docker
     - grafana
   tags: g
 
@@ -50,12 +51,12 @@
     - influxdb_exporter
   tags: influx
 
-- name: Setup web server and exporters
+- name: Setup application and web server
   hosts: web_servers
   become: true
   roles:
+    - docker
     - agama
-    - uwsgi
     - nginx
     - nginx_exporter
   tags: w

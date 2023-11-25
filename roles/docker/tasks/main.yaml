@@ -1,0 +1,33 @@
+- name: Install docker.io and python3-docker
+  ansible.builtin.apt:
+    name:
+      - python3-docker
+      - docker.io
+
+- name: Ensure Docker daemon is running
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+# Development tools:
+- name: Download lazydocker tar.gz file
+  ansible.builtin.get_url:
+    url: https://github.com/jesseduffield/lazydocker/releases/download/v0.23.1/lazydocker_0.23.1_Linux_x86_64.tar.gz
+    dest: /tmp/lazydocker_0.23.1_Linux_x86_64.tar.gz
+    owner: root
+    mode: '0755'
+
+- name: Unarchive lazydocker tar.gz file
+  ansible.builtin.unarchive:
+    src: /tmp/lazydocker_0.23.1_Linux_x86_64.tar.gz
+    dest: /tmp
+    remote_src: true
+
+- name: Move lazydocker binary to /usr/bin
+  ansible.builtin.copy:
+    src: /tmp/lazydocker
+    dest: /usr/bin/lazydocker
+    remote_src: true
+    owner: root
+    mode: '0755'

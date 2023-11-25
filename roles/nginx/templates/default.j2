@@ -2,16 +2,15 @@ server {
     listen 80 default_server;
 
     location / {
-        uwsgi_pass localhost:5000;
-        include uwsgi_params;
+        proxy_pass http://localhost:{{ agama_port }};
     }
 
     location /prometheus {
-        proxy_pass http://{{ groups['prometheus_servers'][0] }}:9090;
+        proxy_pass http://{{ groups['prometheus_servers'][0] }}:{{ prometheus_port }};
     }
 
     location /grafana {
-        proxy_pass http://{{ groups['grafana_servers'][0] }}:3000;
+        proxy_pass http://{{ groups['grafana_servers'][0] }}:{{ grafana_port }};
         proxy_set_header Host $http_host;
     }
 }

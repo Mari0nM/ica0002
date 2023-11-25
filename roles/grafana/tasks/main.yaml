@@ -1,25 +1,4 @@
-- name: Add grafana repository key
-  ansible.builtin.apt_key:
-    url: https://packages.grafana.com/gpg.key
-
-- name: Add grafana repository
-  ansible.builtin.apt_repository:
-    repo: deb https://packages.grafana.com/oss/deb stable main
-
-- name: Install grafana
-  ansible.builtin.apt:
-    name: grafana
-
-- name: Place grafana.ini file
-  ansible.builtin.template:
-    src: grafana.ini.j2
-    dest: /etc/grafana/grafana.ini
-    owner: grafana
-    mode: "0600"
-  no_log: true
-  notify: Restart grafana
-
-- name: Create directories for grafana
+- name: Create directories for Grafana config
   ansible.builtin.file:
     path: '{{ item }}'
     recurse: true
@@ -27,22 +6,29 @@
     owner: root
     mode: "0755"
   loop:
-    - /etc/grafana/provisioning/dashboards
-    - /etc/grafana/provisioning/datasources
-  notify: Restart grafana
+    - /opt/grafana/provisioning/dashboards
+    - /opt/grafana/provisioning/datasources
 
-- name: Copy datasources.yaml
+- name: Place grafana.ini
   ansible.builtin.template:
-    src: datasources.yaml.j2
-    dest: /etc/grafana/provisioning/datasources/datasources.yaml
+    src: grafana.ini.j2
+    dest: /opt/grafana/grafana.ini
     owner: root
     mode: "0755"
   notify: Restart grafana
 
-- name: Copy dashboards.yaml
+- name: Place datasources.yaml
+  ansible.builtin.template:
+    src: datasources.yaml.j2
+    dest: /opt/grafana/provisioning/datasources/datasources.yaml
+    owner: root
+    mode: "0755"
+  notify: Restart grafana
+
+- name: Place dashboards.yaml
   ansible.builtin.template:
     src: dashboards.yaml.j2
-    dest: /etc/grafana/provisioning/dashboards/dashboards.yaml
+    dest: /opt/grafana/provisioning/dashboards/dashboards.yaml
     owner: root
     mode: "0755"
   notify: Restart grafana
@@ -50,7 +36,7 @@
 - name: Place dashboard definition files
   ansible.builtin.copy:
     src: '{{ item }}.json'
-    dest: '/etc/grafana/provisioning/dashboards/{{ item }}.json'
+    dest: '/opt/grafana/provisioning/dashboards/{{ item }}.json'
     owner: root
     mode: "0755"
   loop:
@@ -62,8 +48,9 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Start grafana
-  ansible.builtin.service:
-    name: grafana-server
-    state: started
-    enabled: true
+- name: Start Grafana Docker container
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana
+    published_ports: "{{ grafana_port }}:3000"
+    volumes: /opt/grafana:/etc/grafana
