@@ -66,21 +66,3 @@
     owner: root
     group: root
     mode: '0644'
-
-# - name: Add user 'roman'
-#   ansible.builtin.user:
-#     user: roman
-
-# - name: Add user 'juri'
-#   ansible.builtin.user:
-#     user: juri
-
-# - name: Authorize key for user 'roman'
-#   ansible.posix.authorized_key:
-#     user: roman
-#     key: https://github.com/romankuchin.keys
-
-# - name: Authorize key for user 'juri'
-#   ansible.posix.authorized_key:
-#     user: juri
-#     key: https://github.com/hudolejev.keys
