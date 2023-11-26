@@ -16,6 +16,7 @@
     owner: root
     mode: "0755"
   notify: Restart grafana
+  no_log: true
 
 - name: Place datasources.yaml
   ansible.builtin.template:

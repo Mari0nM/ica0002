@@ -17,6 +17,7 @@
     password: "{{ mysql_exporter_password }}"
     priv: "*.*:PROCESS,REPLICATION CLIENT,SELECT"
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
 
 - name: Place Prometheus args file
   ansible.builtin.copy:

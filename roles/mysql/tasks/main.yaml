@@ -32,6 +32,7 @@
     host: '%'
     login_unix_socket: /var/run/mysqld/mysqld.sock
     priv: "{{ mysql_database }}.*:ALL"
+  no_log: true
 
 - name: Create directory /home/backup/mysql
   ansible.builtin.file:
