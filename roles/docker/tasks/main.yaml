@@ -11,23 +11,8 @@
     enabled: true
 
 # Development tools:
-- name: Download lazydocker tar.gz file
-  ansible.builtin.get_url:
-    url: https://github.com/jesseduffield/lazydocker/releases/download/v0.23.1/lazydocker_0.23.1_Linux_x86_64.tar.gz
-    dest: /tmp/lazydocker_0.23.1_Linux_x86_64.tar.gz
-    owner: root
-    mode: '0755'
-
-- name: Unarchive lazydocker tar.gz file
+- name: Download and install lazydocker
   ansible.builtin.unarchive:
-    src: /tmp/lazydocker_0.23.1_Linux_x86_64.tar.gz
-    dest: /tmp
+    src: https://github.com/jesseduffield/lazydocker/releases/download/v{{ lazydocker_version }}/lazydocker_{{ lazydocker_version }}_Linux_x86_64.tar.gz
+    dest: /usr/local/bin
     remote_src: true
-
-- name: Move lazydocker binary to /usr/bin
-  ansible.builtin.copy:
-    src: /tmp/lazydocker
-    dest: /usr/bin/lazydocker
-    remote_src: true
-    owner: root
-    mode: '0755'
