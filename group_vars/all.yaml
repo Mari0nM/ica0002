@@ -1,5 +1,7 @@
 domain_name: verity.co
 
+internal_service_access_point_hostname: 'Mari0nM-2'
+
 mysql_master_hostname: 'Mari0nM-2'
 mysql_master_host: "{{ hostvars[mysql_master_hostname]['ansible_default_ipv4']['address'] }}"
 

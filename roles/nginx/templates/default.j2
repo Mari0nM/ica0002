@@ -1,10 +1,13 @@
 server {
     listen 80 default_server;
 
+    {% if inventory_hostname in groups['web_servers'] %}
     location / {
-        proxy_pass http://localhost:{{ agama_port }};
+        proxy_pass http://{{ groups['web_servers'][0] }}:{{ agama_port_range_start }};
     }
+    {% endif %}
 
+    {% if inventory_hostname == internal_service_access_point_hostname %}
     location /prometheus {
         proxy_pass http://{{ groups['prometheus_servers'][0] }}:{{ prometheus_port }};
     }
@@ -13,4 +16,5 @@ server {
         proxy_pass http://{{ groups['grafana_servers'][0] }}:{{ grafana_port }};
         proxy_set_header Host $http_host;
     }
+    {% endif %}
 }
