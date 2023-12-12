@@ -9,7 +9,7 @@
 On the host with MySQL:
 ```sh
     sudo su backup # The backup user has pre-configured permissions (authorized_key) to interact with the backup server
-    duplicity restore --no-encryption rsync://Mari0nM@backup.verity.co//home/Mari0nM/mysql /home/backup/restore/
+    duplicity restore --no-encryption --allow-source-mismatch rsync://Mari0nM@backup.verity.co//home/Mari0nM/mysql /home/backup/restore/
     exit
     sudo su
     mysql agama < /home/backup/restore/agama.sql
@@ -38,7 +38,7 @@ Use your best judgement to determine whether the migration went smoothly.
 
 Note:
 ```
-To preserve existing data, the restore utility does not allow restoring data to a database that already exists.
+The restore utility does not allow restoring data to a database that already exists.
 ```
 
 If it is critically important that both the actively running service's data and the backup's data
@@ -49,7 +49,7 @@ are merged, then follow [these instructions](https://docs.influxdata.com/influxd
 On the host with InfluxDB:
 ```sh
     sudo su backup
-    duplicity --no-encryption restore rsync://Mari0nM@backup.verity.co//home/Mari0nM/influxdb /home/backup/restore/
+    duplicity --no-encryption --allow-source-mismatch restore rsync://Mari0nM@backup.verity.co//home/Mari0nM/influxdb /home/backup/restore/
     exit
     sudo su
     service telegraf stop
