@@ -3,7 +3,7 @@
   become: true
   roles:
     - init
-  tags: i
+  tags: init
 
 - name: Setup DNS servers and exporters
   hosts: dns_servers
@@ -11,7 +11,7 @@
   roles:
     - bind
     - bind_exporter
-  tags: b
+  tags: bind
 
 - name: Setup DNS resolution
   hosts: all
@@ -33,7 +33,7 @@
   become: true
   roles:
     - prometheus
-  tags: p
+  tags: prom
 
 - name: Setup Grafana
   hosts: grafana_servers
@@ -41,7 +41,7 @@
   roles:
     - docker
     - grafana
-  tags: g
+  tags: grafana
 
 - name: Setup InfluxDB
   hosts: influxdb_servers
@@ -59,7 +59,7 @@
     - agama
     - nginx
     - nginx_exporter
-  tags: w
+  tags: web
 
 - name: Setup pinger
   hosts: pinger_servers
