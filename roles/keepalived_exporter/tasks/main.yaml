@@ -1,0 +1,20 @@
+- name: Download keepalived exporter
+  ansible.builtin.unarchive:
+    src: 'https://github.com/cafebazaar/keepalived-exporter/releases/download/v{{ keepalived_exporter_version }}/keepalived-exporter-{{ keepalived_exporter_version }}.linux-amd64.tar.gz' # noqa: yaml[line-length]
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Place keepalived Prometheus exporter service file
+  ansible.builtin.copy:
+    src: keepalived-prometheus-exporter.service.j2
+    dest: /etc/systemd/system/keepalived-prometheus-exporter.service
+    mode: "0400"
+  notify:
+    - Reload daemons
+    - Restart keepalived-exporter
+
+- name: Start keepalived Prometheus exporter
+  ansible.builtin.service:
+    name: keepalived-prometheus-exporter.service
+    state: started
+    enabled: true

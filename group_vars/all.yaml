@@ -27,7 +27,7 @@ mysql_replica_password: !vault |
           6230353465623834390a303763353333366262313066326337343438623539383733663334633231
           30643039306437316336353835336564313739303233653931343362383732306165
 
-node_id: "{{ (ansible_port / 100) | int }}"
+node_id: '{{ (ansible_port / 100) | int }}'
 
 mysql_database: agama
 mysql_user: agama
@@ -66,6 +66,15 @@ grafana_password: !vault |
           62643963326562633230316263623535623737653638333730373563313330383232336633356438
           3934323463646239336430303537343565383331633265313231
 
+keepalived_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38376339383237343234373736373761333530333237353934656632383532323635326630643335
+          3432376639313432626439306430663761336564656530320a383365653135376535316635313930
+          32363861363165323131346331383866643661656134363832393031383832386632396562613334
+          6434666165376230330a316338343961393234616431313932383633336638333462663631613536
+          62623139313932363636323361643130636164643565366536376330336362333632383963303563
+          6662373666373830613366303462616336623365366630363734
+
 forwarders:
   - 1.1.1.1
   - 8.8.8.8
@@ -83,12 +92,14 @@ domain: verity.co
 public_ip: 193.40.156.67
 public_port: groups['web_servers']
 
-agama_port: 8001
+agama_port_range_start: 8001
 prometheus_port: 9090
 node_exporter_port: 9100
 bind_exporter_port: 9119
 nginx_exporter_port: 9113
 mysql_exporter_port: 9104
+keepalived_exporter_port: 9165
+haproxy_exporter_port: 9101
 influxdb_metrics_port: 9424
 influxdb_api_port: 8086
 grafana_port: 3001
@@ -98,3 +109,10 @@ influx_database_name: latency
 backup_server_user: Mari0nM
 backup_server_ip: 192.168.42.132
 backup_server_public_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEu6pFFWyuRrl4WGFPQGElYN9txwTGm2wSntcpVAaN90
+
+keepalived_interface: ens3
+keepalived_virtual_id: 3
+agama_containers_per_vm: 2
+
+keepalived_exporter_version: '1.2.0'
+lazydocker_version: '0.23.1'

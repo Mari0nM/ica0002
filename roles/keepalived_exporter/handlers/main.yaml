@@ -1,0 +1,7 @@
+- name: Reload daemons # noqa: command-instead-of-module no-changed-when
+  ansible.builtin.command: systemctl daemon-reload
+
+- name: Restart keepalived-exporter
+  ansible.builtin.service:
+    name: keepalived-exporter
+    state: restarted

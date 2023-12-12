@@ -1,0 +1,41 @@
+global_defs {
+    enable_script_security
+    script_user keepalived_script
+}
+
+vrrp_script check_haproxy {                 
+    script "/usr/local/bin/script" 
+    weight 20
+    interval 1
+}
+
+vrrp_instance web_servers {
+    interface {{ keepalived_interface }}
+    virtual_router_id {{ keepalived_virtual_id }}
+    advert_int 1
+    priority {% if inventory_hostname == groups['haproxy_servers'][0] %}100{% else +%}99{% endif +%}
+
+    authentication {
+        auth_type PASS
+        auth_pass {{ keepalived_password }}
+    }
+
+    virtual_ipaddress {
+        {% set ip = hostvars[groups['all'][0]]['ansible_default_ipv4']['address'] -%}
+        {%- set octet_1 = ip.split('.')[0] -%}
+        {%- set octet_2 = ip.split('.')[1] -%}
+        {%- set octet_3 = ip.split('.')[2] -%}
+        {%- set octet_4 = ip.split('.')[3] -%}
+        {{ octet_1 }}.{{ octet_2 }}.{{ (octet_3 | int + 58) % 256 }}.{{ octet_4 }}/24
+    }
+
+    unicast_peer {
+        {% for vm in groups['web_servers'] | reject('eq', inventory_hostname) %}
+        {{ hostvars[vm]['ansible_default_ipv4']['address'] }}
+        {% endfor %}
+    }
+
+    track_script {
+        check_haproxy
+    }
+}

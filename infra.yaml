@@ -68,3 +68,15 @@
     - pinger
   tags:
     - pinger
+
+- name: Setup haproxy
+  hosts: haproxy_servers
+  become: true
+  roles:
+    - haproxy
+    - haproxy_exporter
+    - keepalived
+    - keepalived_exporter
+  tags:
+    - haproxy
+    - keepalived

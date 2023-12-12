@@ -1,0 +1,29 @@
+- name: Install keepalived
+  ansible.builtin.apt:
+    name: keepalived
+
+- name: Add user 'keepalived_script'
+  ansible.builtin.user:
+    name: 'keepalived_script'
+    home: /home/keepalived_script
+
+- name: Place keepalived.conf
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    mode: "0400"
+  no_log: true
+  notify: Restart keepalived
+
+- name: Place script
+  ansible.builtin.template:
+    src: script.j2
+    dest: /usr/local/bin/script
+    mode: "0500"
+    owner: 'keepalived_script'
+  notify: Restart keepalived
+
+- name: Start keepalived
+  ansible.builtin.service:
+    name: keepalived
+    state: started
