@@ -4,5 +4,5 @@
     state: restarted
     enabled: true
 
-- name: Reload daemons # noqa: command-instead-of-module command-instead-of-shell no-changed-when
-  ansible.builtin.shell: systemctl daemon-reload
+- name: Reload daemons # noqa: command-instead-of-module no-changed-when
+  ansible.builtin.command: systemctl daemon-reload
