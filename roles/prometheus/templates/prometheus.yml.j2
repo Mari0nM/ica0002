@@ -12,9 +12,9 @@ scrape_configs:
 
   - job_name: linux
     static_configs:
-      - targets: 
+      - targets:
+        # TODO: use variabled instead of port numbers
         {% for vm in groups['all'] %}
-# TODO: use variabled instead of port numbers
         - {{ vm }}:9100
         {% endfor %}
 
