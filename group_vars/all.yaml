@@ -1,8 +1,12 @@
+localhost_ipv4: '127.0.0.1'
+local_network: 192.168.42.0/23
+localhost: 127.0.0.0/8
+
 domain_name: verity.co
 
 internal_service_access_point_hostname: 'Mari0nM-2'
 
-mysql_master_hostname: 'Mari0nM-2'
+mysql_master_hostname: "{{ groups['db_server_masters'][0] }}"
 mysql_master_host: "{{ hostvars[mysql_master_hostname]['ansible_default_ipv4']['address'] }}"
 
 mysql_backup_user: backup
@@ -75,6 +79,28 @@ keepalived_password: !vault |
           62623139313932363636323361643130636164643565366536376330336362333632383963303563
           6662373666373830613366303462616336623365366630363734
 
+bind_update_key_name: "update_key"
+bind_update_key_algorithm: "hmac-sha256"
+bind_update_key_secret: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          37396338346135663138636631303537633865356265666636333364663461656666346336346562
+          3138666265343330343265356165666264383134666462390a666539376138356233343265613766
+          66376138353561613830393431373063323663393933356439663732353138646562366631636564
+          3231333035316266610a333235386232636533633334303237616230343762336232326163353430
+          66353166643834633533346330366636643338373763646436366631343137613064363264656166
+          3839633964373132653661313766323530643231323366383162
+
+bind_transfer_key_name: "transfer_key"
+bind_transfer_key_algorithm: "hmac-sha256"
+bind_transfer_key_secret: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32326261363062643738373761333261653761303563363964336431363139363732373766636136
+          6239623730306463323864353435333532393336323332620a343934623530613332363737353736
+          35336664656137323731306635313565626537333930396434633663366631616536333334356466
+          6163386261663831660a623932323565383331313136666162326538663031306666303262346336
+          34383537313561336561636339393838313061346665313034376535356635626239653237316139
+          3666366637636131643565316536636239383037353433333264
+
 forwarders:
   - 1.1.1.1
   - 8.8.8.8
@@ -85,16 +111,21 @@ pinger_targets:
   - cloudflare.com
   - twitter.com
 
-local_network: 192.168.42.0/23
-localhost: 127.0.0.0/8
-domain: verity.co
+service_cname_records:
+  web_app: www
+  mysql: mysql
+  influxdb: influxdb
+  prometheus: prometheus
+  grafana: grafana
+  name_server: ns
+  haproxy: lb
+  backup_server: backup
 
-public_ip: 193.40.156.67
-public_port: groups['web_servers']
-
+syslog_port: 6514
 agama_port_range_start: 8001
 prometheus_port: 9090
 node_exporter_port: 9100
+bind_statistics_channel_port: 8053
 bind_exporter_port: 9119
 nginx_exporter_port: 9113
 mysql_exporter_port: 9104
@@ -115,4 +146,5 @@ keepalived_virtual_id: 3
 agama_containers_per_vm: 2
 
 keepalived_exporter_version: '1.2.0'
+infludb_stats_exporter_version: '0.1.1'
 lazydocker_version: '0.23.1'

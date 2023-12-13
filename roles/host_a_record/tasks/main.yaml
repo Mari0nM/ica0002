@@ -1,0 +1,7 @@
+- name: Set host's A record
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_type: A
+    dns_record_record: '{{ inventory_hostname }}'
+    dns_record_value: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"

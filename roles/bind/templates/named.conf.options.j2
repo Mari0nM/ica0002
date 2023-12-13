@@ -1,5 +1,5 @@
 options {
-    directory "/var/lib/bind";
+    directory "/var/cache/bind";
 
     forwarders {
         {% for forwarder in forwarders %}
@@ -16,6 +16,15 @@ options {
 };
 
 statistics-channels {
-    # TODO: un-hardcode these values
-    inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+    inet {{ localhost_ipv4 }} port {{ bind_statistics_channel_port }} allow { {{ localhost_ipv4 }}; };
+};
+
+key "{{ bind_transfer_key_name }}" {
+    algorithm {{ bind_transfer_key_algorithm }};
+    secret "{{ bind_transfer_key_secret }}";
+};
+
+key "{{ bind_update_key_name }}" {
+    algorithm {{ bind_update_key_algorithm }};
+    secret "{{ bind_update_key_secret }}";
 };

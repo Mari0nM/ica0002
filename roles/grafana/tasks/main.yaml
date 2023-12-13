@@ -55,3 +55,9 @@
     image: grafana/grafana
     published_ports: "{{ grafana_port }}:3000"
     volumes: /opt/grafana:/etc/grafana
+
+- name: Add CNAME record
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.grafana }}'

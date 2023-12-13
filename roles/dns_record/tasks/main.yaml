@@ -1,0 +1,14 @@
+- name: Install dnspython
+  ansible.builtin.apt:
+    name: python3-dnspython
+
+- name: 'Add DNS record of type {{ dns_record_type }}'
+  community.general.nsupdate:
+    key_name: '{{ bind_update_key_name }}'
+    key_algorithm: '{{ bind_update_key_algorithm }}'
+    key_secret: '{{ bind_update_key_secret }}'
+    server: "ns1.{{ domain_name }}"
+    zone: '{{ domain_name }}'
+    record: '{{ dns_record_record }}'
+    value: '{{ dns_record_value }}'
+    type: '{{ dns_record_type }}'

@@ -1,0 +1,13 @@
+zone "{{ domain_name }}" {
+    type master;
+    allow-update { key {{ bind_update_key_name }}; };
+    allow-transfer { {{ localhost_ipv4 }}; key {{ bind_transfer_key_name }}; };
+    file "db.{{ domain_name }}";
+};
+
+zone "168.192.in-addr.arpa" {
+    type master;
+    allow-update { key {{ bind_update_key_name }}; };
+    allow-transfer { {{ localhost_ipv4 }}; key {{ bind_transfer_key_name }}; };
+    file "db.{{ domain_name }}.rev";
+};

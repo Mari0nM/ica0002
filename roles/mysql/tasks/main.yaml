@@ -90,3 +90,20 @@
     name: mysql
     state: started
     enabled: true
+
+- name: Add CNAME record for database master server
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.mysql }}-1'
+  when: inventory_hostname in groups['db_server_masters']
+
+- name: Add CNAME record for database slave servers
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.mysql }}-{{ index + 2 }}'
+  loop: "{{ groups['db_server_slaves'] }}"
+  loop_control:
+    index_var: index
+  when: inventory_hostname in groups['db_server_slaves']

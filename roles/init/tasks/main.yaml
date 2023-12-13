@@ -36,33 +36,3 @@
     name: rsyslog
     state: started
     enabled: true
-
-- name: Add the user 'backup' and their ssh key
-  ansible.builtin.user:
-    name: backup
-    home: /home/backup
-    shell: /bin/bash
-    generate_ssh_key: true
-    ssh_key_bits: 2048
-    ssh_key_file: .ssh/id_rsa
-
-- name: Create a directory /home/backup/restore
-  ansible.builtin.file:
-    path: /home/backup/restore
-    state: directory
-    owner: backup
-    group: backup
-    mode: '0700'
-
-- name: Install duplicity
-  ansible.builtin.apt:
-    name: duplicity
-    state: present
-
-- name: Upload /home/backup/.ssh/known_hosts
-  ansible.builtin.template:
-    src: known_hosts.j2
-    dest: /home/backup/.ssh/known_hosts
-    owner: root
-    group: root
-    mode: '0644'

@@ -2,7 +2,7 @@
   ansible.builtin.user:
     name: pinger
 
-- name: Install 'fping'
+- name: Install fping
   ansible.builtin.apt:
     name: fping
 

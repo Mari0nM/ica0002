@@ -1,0 +1,16 @@
+$TTL	604800
+{{ domain_name }}.	IN	SOA	{{ groups['dns_masters'][0] }}.{{ domain_name }}. marion.{{ domain_name }}. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+
+{% for _ in groups['dns_masters'] + groups['dns_slaves'] %}
+{{ domain_name }}.	IN	NS	ns{{ loop.index }}
+{% endfor %}
+
+{% for ns in groups['dns_masters'] + groups['dns_slaves'] %}
+ns{{ loop.index }}	IN	A	{{ hostvars[ns]['ansible_default_ipv4']['address']  }}
+{% endfor %}

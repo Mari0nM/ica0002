@@ -20,6 +20,27 @@
     - dns_resolve
   tags: dns
 
+- name: Setup hosts' A records
+  hosts: all
+  become: true
+  roles:
+    - host_a_record
+  tags: a_records
+
+- name: Setup hosts' PTR records
+  hosts: all
+  become: true
+  roles:
+    - host_ptr_record
+  tags: ptr_records
+
+- name: Setup backup server functionality
+  hosts: all
+  become: true
+  roles:
+    - backup
+  tags: backup
+
 - name: Setup database servers and exporters
   hosts: db_servers
   become: true

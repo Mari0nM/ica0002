@@ -28,7 +28,7 @@
     image: agama
     published_ports: '{{ agama_port_range_start + item }}:8000'
     env:
-      AGAMA_DATABASE_URI: mysql+pymysql://{{ mysql_user }}:{{ mysql_password }}@{{ mysql_master_host }}/{{ mysql_database }}
+      AGAMA_DATABASE_URI: mysql+pymysql://{{ mysql_user }}:{{ mysql_password }}@mysql-1/{{ mysql_database }}
   no_log: true
   loop: "{{ range(0, agama_containers_per_vm | int) | list }}"
 
@@ -55,3 +55,10 @@
 - name: Print container destruction output
   ansible.builtin.debug:
     msg: '{{ destroycontainers.stdout }}'
+  when: destroycontainers.stdout
+
+- name: Add CNAME record
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.web_app }}-{{ inventory_hostname[-1] }}'
