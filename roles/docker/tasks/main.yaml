@@ -4,7 +4,7 @@
       - python3-docker
       - docker.io
 
-- name: Ensure Docker daemon is running
+- name: Start the Docker daemon
   ansible.builtin.service:
     name: docker
     state: started

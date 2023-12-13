@@ -1,0 +1,20 @@
+$TTL	604800
+168.192.in-addr.arpa.	IN	SOA	{{ groups['dns_masters'][0] }}.{{ domain_name }}. marion.{{ domain_name }}. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+
+{% for _ in groups['dns_masters'] + groups['dns_slaves'] %}
+168.192.in-addr.arpa.	IN	NS	ns{{ loop.index }}.{{ domain_name }}.
+{% endfor %}
+
+{% for ns in groups['dns_masters'] + groups['dns_slaves'] %}
+ns{{ loop.index }}	IN	A	{{ hostvars[ns]['ansible_default_ipv4']['address']  }}
+{% endfor %}
+
+{% for ns in groups['dns_masters'] + groups['dns_slaves'] %}
+{{ hostvars[ns]['ansible_default_ipv4']['address'].split('.')[3] }}.{{ hostvars[ns]['ansible_default_ipv4']['address'].split('.')[2] }} IN  PTR ns{{ loop.index }}.{{ domain_name }}.
+{% endfor %}

@@ -14,3 +14,9 @@
   ansible.builtin.service:
     name: haproxy
     state: started
+
+- name: Add CNAME record
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.haproxy }}-{{ inventory_hostname[-1] }}'

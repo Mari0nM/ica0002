@@ -1,5 +1,5 @@
 45 19 * * *  backup  rm -rf /home/backup/influxdb/*; influxd backup -portable /home/backup/influxdb/
 
-30 20 * * 5  backup  duplicity --no-encryption --allow-source-mismatch full /home/backup/influxdb/ rsync://{{backup_server_user}}@backup.{{domain_name}}//home/{{backup_server_user}}/influxdb/
+30 20 * * 5  backup  duplicity --no-encryption --allow-source-mismatch full /home/backup/influxdb/ rsync://{{ backup_server_user }}@{{ service_cname_records.backup_server }}//home/{{ backup_server_user }}/influxdb/
 
-00 20 * * *  backup  duplicity --no-encryption --allow-source-mismatch incremental /home/backup/influxdb/ rsync://{{backup_server_user}}@backup.{{domain_name}}//home/{{backup_server_user}}/influxdb/
+00 20 * * *  backup  duplicity --no-encryption --allow-source-mismatch incremental /home/backup/influxdb/ rsync://{{ backup_server_user }}@{{ service_cname_records.backup_server }}//home/{{ backup_server_user }}/influxdb/

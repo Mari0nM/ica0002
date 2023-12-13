@@ -1,0 +1,7 @@
+- name: Set host's PTR record
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_type: PTR
+    dns_record_record: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'].split('.')[3] }}.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'].split('.')[2] }}" # noqa: yaml[line-length]
+    dns_record_value: '{{ inventory_hostname }}'

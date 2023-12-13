@@ -10,19 +10,56 @@
 
 - name: Place zone file
   ansible.builtin.template:
-    src: db.verity.co.j2
-    dest: /var/lib/bind/db.verity.co
+    src: db.domain.j2
+    dest: '/var/cache/bind/db.{{ domain_name }}'
     owner: bind
-    mode: '0600'
+    mode: '0755'
+    force: false
+  when: inventory_hostname in groups['dns_masters']
   notify: Run rndc reload
 
-- name: Place configuration files
+- name: Place reverse zone file
   ansible.builtin.template:
-    src: named.conf.{{ item }}.j2
-    dest: /etc/bind/named.conf.{{ item }}
+    src: db.domain.rev.j2
+    dest: '/var/cache/bind/db.{{ domain_name }}.rev'
     owner: bind
-    mode: '0600'
-  loop:
-    - options
-    - local
+    mode: '0755'
+    force: false
+  when: inventory_hostname in groups['dns_masters']
+  notify: Run rndc reload
+
+- name: Place DNS masters' local configuration file
+  ansible.builtin.template:
+    src: named.conf.local.master.j2
+    dest: /etc/bind/named.conf.local
+    owner: bind
+    mode: '0755'
+  when: inventory_hostname in groups['dns_masters']
   notify: Run rndc reconfig
+
+- name: Place DNS slaves' local configuration file
+  ansible.builtin.template:
+    src: named.conf.local.slave.j2
+    dest: /etc/bind/named.conf.local
+    owner: bind
+    mode: '0755'
+  when: inventory_hostname in groups['dns_slaves']
+  notify: Run rndc reconfig
+
+- name: Place global configuration file
+  ansible.builtin.template:
+    src: named.conf.options.j2
+    dest: /etc/bind/named.conf.options
+    owner: bind
+    mode: '0755'
+  notify: Run rndc reconfig
+  no_log: true
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Add CNAME record for DNS servers
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.name_server }}-{{ inventory_hostname[-1] }}'

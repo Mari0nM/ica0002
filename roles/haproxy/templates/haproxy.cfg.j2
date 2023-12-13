@@ -24,13 +24,22 @@ defaults
 	errorfile 403 /etc/haproxy/errors/403.http
 	errorfile 408 /etc/haproxy/errors/408.http
 
+frontend stats
+	mode http
+	bind *:9000
+	stats enable
+	stats refresh 15s
+	stats uri /stats
+	acl is_localhost src 127.0.0.1
+	stats admin if is_localhost
+
 listen agama
     bind :88
 	{% set ns = namespace(instance_number=1) %}
 
-	{% for vm in groups['web_servers'] %}
+	{% for vm_number in range(1, groups['web_servers'] | length + 1) %}
 	{% for i in range(0, agama_containers_per_vm) %}
-	server agama-{{ ns.instance_number }} {{ vm }}:{{ agama_port_range_start + i }} check
+	server agama-{{ ns.instance_number }} {{ service_cname_records.web_app }}-{{ vm_number }}:{{ agama_port_range_start + i }} check
 	{% set ns.instance_number = ns.instance_number + 1 %}
 	{% endfor %}
 	{% endfor %}

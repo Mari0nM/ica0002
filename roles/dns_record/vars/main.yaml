@@ -1,0 +1,3 @@
+dns_record_record: ''
+dns_record_value: '{{ inventory_hostname }}'
+dns_record_type: CNAME

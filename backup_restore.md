@@ -9,6 +9,8 @@
 On the host with MySQL:
 ```sh
     sudo su backup # The backup user has pre-configured permissions (authorized_key) to interact with the backup server
+    # If there are issues with DNS, you can replace the domain in the following command with an IP address. Check group_vars/all.yaml
+    # for the entry 'backup_server_ip'
     duplicity restore --no-encryption --allow-source-mismatch rsync://Mari0nM@backup.verity.co//home/Mari0nM/mysql /home/backup/restore/
     exit
     sudo su
@@ -49,6 +51,8 @@ are merged, then follow [these instructions](https://docs.influxdata.com/influxd
 On the host with InfluxDB:
 ```sh
     sudo su backup
+    # If there are issues with DNS, you can replace the domain in the following command with an IP address. Check group_vars/all.yaml
+    # for the entry 'backup_server_ip'
     duplicity --no-encryption --allow-source-mismatch restore rsync://Mari0nM@backup.verity.co//home/Mari0nM/influxdb /home/backup/restore/
     exit
     sudo su

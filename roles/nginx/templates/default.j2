@@ -3,17 +3,18 @@ server {
 
     {% if inventory_hostname in groups['web_servers'] %}
     location / {
-        proxy_pass http://{{ groups['web_servers'][0] }}:{{ agama_port_range_start }};
+        proxy_pass http://{{ localhost_ipv4 }}:{{ agama_port_range_start }};
+        proxy_set_header Host $http_host;
     }
     {% endif %}
 
-    {% if inventory_hostname == internal_service_access_point_hostname %}
+    {% if inventory_hostname in groups['internal_service_proxies'] %}
     location /prometheus {
-        proxy_pass http://{{ groups['prometheus_servers'][0] }}:{{ prometheus_port }};
+        proxy_pass http://{{ service_cname_records.prometheus }}:{{ prometheus_port }};
     }
 
     location /grafana {
-        proxy_pass http://{{ groups['grafana_servers'][0] }}:{{ grafana_port }};
+        proxy_pass http://{{ service_cname_records.grafana }}:{{ grafana_port }};
         proxy_set_header Host $http_host;
     }
     {% endif %}

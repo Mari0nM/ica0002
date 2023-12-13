@@ -20,6 +20,27 @@
     - dns_resolve
   tags: dns
 
+- name: Setup hosts' A records
+  hosts: all
+  become: true
+  roles:
+    - host_a_record
+  tags: a_records
+
+- name: Setup hosts' PTR records
+  hosts: all
+  become: true
+  roles:
+    - host_ptr_record
+  tags: ptr_records
+
+- name: Setup backup server functionality
+  hosts: all
+  become: true
+  roles:
+    - backup
+  tags: backup
+
 - name: Setup database servers and exporters
   hosts: db_servers
   become: true
@@ -43,6 +64,13 @@
     - grafana
   tags: grafana
 
+- name: Setup proxy for internal services
+  hosts: internal_service_proxies
+  become: true
+  roles:
+    - nginx
+  tags: proxy
+
 - name: Setup InfluxDB
   hosts: influxdb_servers
   become: true
@@ -50,6 +78,14 @@
     - influxdb
     - influxdb_exporter
   tags: influx
+
+- name: Setup pinger
+  hosts: pinger_servers
+  become: true
+  roles:
+    - pinger
+  tags:
+    - pinger
 
 - name: Setup application and web server
   hosts: web_servers
@@ -60,14 +96,6 @@
     - nginx
     - nginx_exporter
   tags: web
-
-- name: Setup pinger
-  hosts: pinger_servers
-  become: true
-  roles:
-    - pinger
-  tags:
-    - pinger
 
 - name: Setup haproxy
   hosts: haproxy_servers

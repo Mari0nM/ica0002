@@ -13,7 +13,7 @@
       - influxdb
       - telegraf=1.28.2-1
 
-- name: Copy influxdb config
+- name: Place influxdb config file
   ansible.builtin.copy:
     src: influxdb.conf
     dest: /etc/influxdb/influxdb.conf
@@ -21,14 +21,14 @@
     mode: '0600'
   notify: Restart influxdb
 
-- name: Copy telegraf config file
+- name: Place telegraf config file
   ansible.builtin.copy:
     src: telegraf.conf
     dest: /etc/telegraf/telegraf.conf
     mode: "0644"
   notify: Restart telegraf
 
-- name: Create a backup directory
+- name: Create backup directory
   ansible.builtin.file:
     path: /home/backup/influxdb
     state: directory
@@ -42,14 +42,20 @@
     owner: root
     mode: '0644'
 
-- name: Start service influxdb
+- name: Start influxdb
   ansible.builtin.service:
     name: influxdb
     state: started
     enabled: true
 
-- name: Start service telegraf
+- name: Start telegraf
   ansible.builtin.service:
     name: telegraf
     state: started
     enabled: true
+
+- name: Add CNAME record
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: "{{ service_cname_records.influxdb }}"

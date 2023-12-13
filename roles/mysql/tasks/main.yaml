@@ -75,18 +75,42 @@
     login_unix_socket: /var/run/mysqld/mysqld.sock
   no_log: true
 
+- name: Set fact - db_master_moved
+  ansible.builtin.set_fact:
+    cacheable: true
+    mysql_db_master_moved: false
+
 - name: Set replicas to read-only
   community.mysql.mysql_variables:
     variable: read_only
     value: "{{ 'OFF' if inventory_hostname == mysql_master_hostname else 'ON' }}"
     mode: persist
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  register: set_db_readonly
   notify:
     - Reset MySQL source
     - Reset MySQL replica
+    - Schedule Agama containers for restart
 
 - name: Start service
   ansible.builtin.service:
     name: mysql
     state: started
     enabled: true
+
+- name: Add CNAME record for database master server
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.mysql }}-1'
+  when: inventory_hostname in groups['db_server_masters']
+
+- name: Add CNAME record for database slave servers
+  ansible.builtin.include_role:
+    name: dns_record
+  vars:
+    dns_record_record: '{{ service_cname_records.mysql }}-{{ index + 2 }}'
+  loop: "{{ groups['db_server_slaves'] }}"
+  loop_control:
+    index_var: index
+  when: inventory_hostname in groups['db_server_slaves']

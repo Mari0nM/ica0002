@@ -26,3 +26,8 @@
     - startreplica
   when: inventory_hostname != mysql_master_hostname
   no_log: true
+
+- name: Schedule Agama containers for restart
+  ansible.builtin.set_fact:
+    cacheable: true
+    mysql_db_master_moved: true

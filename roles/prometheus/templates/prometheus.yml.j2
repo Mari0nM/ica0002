@@ -8,40 +8,53 @@ scrape_configs:
     scrape_timeout: 5s
     metrics_path: /prometheus/metrics #defaults to '/metrics'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['localhost:{{ prometheus_port }}']
 
   - job_name: linux
     static_configs:
       - targets:
-        # TODO: use variabled instead of port numbers
         {% for vm in groups['all'] %}
-        - {{ vm }}:9100
+        - {{ vm }}:{{ node_exporter_port }}
         {% endfor %}
 
   - job_name: bind9
     static_configs:
       - targets: 
-        {% for vm in groups['dns_servers'] %}
-        - {{ vm }}:{{ bind_exporter_port }}
+        {% for vm in range(1, groups['dns_servers'] | length + 1) %}
+        - {{ service_cname_records.name_server }}-{{ loop.index }}:{{ bind_exporter_port }}
         {% endfor %}
 
   - job_name: mysql
     static_configs:
       - targets:
-        {% for vm in groups['db_servers'] %}
-        - {{ vm }}:{{ mysql_exporter_port }}
+        {% for vm in range(1, groups['db_servers'] | length + 1) %}
+        - {{ service_cname_records.mysql }}-{{ loop.index }}:{{ mysql_exporter_port }}
         {% endfor %}
 
   - job_name: nginx
     static_configs:
       - targets:
-        {% for vm in groups['web_servers'] %}
-        - {{ vm }}:{{ nginx_exporter_port }}
+        {% for vm in range(1, groups['web_servers'] | length + 1) %}
+        - {{ service_cname_records.web_app }}-{{ loop.index }}:{{ nginx_exporter_port }}
         {% endfor %}
   
   - job_name: influxdb
     static_configs:
       - targets:
-        {% for vm in groups['influxdb_servers'] %}
-        - {{ vm }}:{{ influxdb_metrics_port }}
+        {% for vm in range(1, groups['influxdb_servers'] | length + 1) %}
+        - {{ service_cname_records.influxdb }}:{{ influxdb_metrics_port }}
+        {% endfor %}
+
+  - job_name: haproxy
+    static_configs:
+      - targets:
+        {% for vm in range(1, groups['haproxy_servers'] | length + 1) %}
+        - {{ service_cname_records.haproxy }}-{{ loop.index }}:{{ haproxy_exporter_port }}
+        {% endfor %}
+
+  - job_name: keepalived
+    static_configs:
+      - targets:
+        {% for vm in range(1, groups['haproxy_servers'] | length + 1) %}
+        - {{ service_cname_records.haproxy }}-{{ loop.index }}:{{ keepalived_exporter_port }}
         {% endfor %}

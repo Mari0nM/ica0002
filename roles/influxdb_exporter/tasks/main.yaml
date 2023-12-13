@@ -1,11 +1,11 @@
 - name: Download influxdb-exporter
   ansible.builtin.get_url:
-    url: https://github.com/carlpett/influxdb_stats_exporter/releases/download/v0.1.1/influx_stats_exporter_linux_amd64
+    url: https://github.com/carlpett/influxdb_stats_exporter/releases/download/v{{ infludb_stats_exporter_version }}/influx_stats_exporter_linux_amd64
     dest: /usr/local/bin/
     owner: root
     mode: '0755'
 
-- name: Make a service unit
+- name: Place service unit file
   ansible.builtin.copy:
     src: prometheus-influxdb-stats-exporter.service
     dest: /etc/systemd/system/prometheus-influxdb-stats-exporter.service
@@ -15,7 +15,7 @@
     - Reload systemd
     - Restart prometheus-influxdb
 
-- name: Ensure influxdb-stats-exporter is running
+- name: Start influxdb-stats-exporter
   ansible.builtin.service:
     name: prometheus-influxdb-stats-exporter
     state: started

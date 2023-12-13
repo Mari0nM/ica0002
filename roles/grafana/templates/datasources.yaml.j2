@@ -3,7 +3,7 @@ apiVersion: 1
 datasources:
  - name: Prometheus
    type: prometheus
-   url: http://Mari0nM-2:9090/prometheus
+   url: http://prometheus:{{ prometheus_port }}/prometheus
    password:
    user:
    database:
@@ -13,7 +13,7 @@ datasources:
 
  - name: InfluxDB-pinger
    type: influxdb
-   url: http://{{ groups['influxdb_servers'][0] }}:{{ influxdb_api_port }}
+   url: http://influxdb:{{ influxdb_api_port }}
    password:
    user:
    database: latency
@@ -21,7 +21,7 @@ datasources:
 
  - name: InfluxDB-telegraf
    type: influxdb
-   url: http://{{ groups['influxdb_servers'][0] }}:{{ influxdb_api_port }}
+   url: http://influxdb:{{ influxdb_api_port }}
    password:
    user:
    database: telegraf
