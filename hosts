@@ -1,24 +1,30 @@
-Mari0nM-1 ansible_host=193.40.156.67 ansible_port=18922 ansible_user=ubuntu
-Mari0nM-2 ansible_host=193.40.156.67 ansible_port=11722 ansible_user=ubuntu
-
-[db_server_masters]
-Mari0nM-2
-
-[db_server_slaves]
-Mari0nM-1
-
-[db_servers:children]
-db_server_masters
-db_server_slaves
+Mari0nM-1 ansible_host=193.40.156.67 ansible_port=18322 ansible_user=ubuntu
+Mari0nM-2 ansible_host=193.40.156.67 ansible_port=3822 ansible_user=ubuntu
+Mari0nM-3 ansible_host=193.40.156.67 ansible_port=11322 ansible_user=ubuntu
 
 [web_servers]
 Mari0nM-1
 Mari0nM-2
 
-[dns_masters]
+[haproxy_servers]
+Mari0nM-1
+Mari0nM-2
+
+[db_server_masters]
 Mari0nM-1
 
+[db_server_slaves]
+Mari0nM-2
+
+[db_servers:children]
+db_server_masters
+db_server_slaves
+
+[dns_masters]
+Mari0nM-3
+
 [dns_slaves]
+Mari0nM-1
 Mari0nM-2
 
 [dns_servers:children]
@@ -26,18 +32,16 @@ dns_masters
 dns_slaves
 
 [prometheus_servers]
-Mari0nM-2
+Mari0nM-3
 
 [grafana_servers]
-Mari0nM-1
+Mari0nM-3
 
 [influxdb_servers]
-Mari0nM-1
+Mari0nM-3
 
 [pinger_servers]
-Mari0nM-1
+Mari0nM-3
 
-[haproxy_servers]
-Mari0nM-1
-Mari0nM-2
 [internal_service_proxies]
+Mari0nM-3
