@@ -9,6 +9,7 @@ Verity.co agrees to provide the following infrastructure services to your compan
 * Database Servers
 * Monitoring Servers
 * Backup Servers
+* Load balancers
 * and more based on our clients needs and our agreements
 
 Verity also provides backup services for above mentioned infrastructure services.
