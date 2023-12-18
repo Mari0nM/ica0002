@@ -17,6 +17,12 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
+- name: Start service
+  ansible.builtin.service:
+    name: mysql
+    state: started
+    enabled: true
+
 - name: Create Agama database
   community.mysql.mysql_db:
     name: '{{ mysql_database }}'
@@ -91,12 +97,6 @@
     - Reset MySQL source
     - Reset MySQL replica
     - Schedule Agama containers for restart
-
-- name: Start service
-  ansible.builtin.service:
-    name: mysql
-    state: started
-    enabled: true
 
 - name: Add CNAME record for database master server
   ansible.builtin.include_role:
