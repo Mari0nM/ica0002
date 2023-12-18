@@ -27,6 +27,7 @@
     name: "agama-{{ item + 1 }}"
     image: agama
     published_ports: '{{ agama_port_range_start + item }}:8000'
+    restart_policy: always
     env:
       AGAMA_DATABASE_URI: mysql+pymysql://{{ mysql_user }}:{{ mysql_password }}@mysql-1/{{ mysql_database }}
     restart: "{{ groups['db_servers'] | map('extract', hostvars, 'mysql_db_master_moved') | default([True]) is any }}"
