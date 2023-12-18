@@ -10,11 +10,13 @@ server {
 
     {% if inventory_hostname in groups['internal_service_proxies'] %}
     location /prometheus {
-        proxy_pass http://{{ service_cname_records.prometheus }}:{{ prometheus_port }};
+        set $prometheus_host {{ service_cname_records.prometheus }};
+        proxy_pass http://$prometheus_host:{{ prometheus_port }};
     }
 
     location /grafana {
-        proxy_pass http://{{ service_cname_records.grafana }}:{{ grafana_port }};
+        set $grafana_host {{ service_cname_records.grafana }};
+        proxy_pass http://$grafana_host:{{ grafana_port }};
         proxy_set_header Host $http_host;
     }
     {% endif %}
