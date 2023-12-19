@@ -65,7 +65,7 @@
   tags: grafana
 
 - name: Setup proxy for internal services
-  hosts: internal_service_proxies
+  hosts: prometheus_servers:grafana_servers
   become: true
   roles:
     - nginx

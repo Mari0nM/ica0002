@@ -8,16 +8,16 @@ server {
     }
     {% endif %}
 
-    {% if inventory_hostname in groups['internal_service_proxies'] %}
+    {% if inventory_hostname in groups['prometheus_servers'] %}
     location /prometheus {
-        set $prometheus_host {{ service_cname_records.prometheus }};
-        proxy_pass http://$prometheus_host:{{ prometheus_port }};
+        proxy_pass http://localhost:{{ prometheus_port }};
     }
+    {% endif %}
 
+    {% if inventory_hostname in groups['grafana_servers'] %}
     location /grafana {
-        set $grafana_host {{ service_cname_records.grafana }};
-        proxy_pass http://$grafana_host:{{ grafana_port }};
         proxy_set_header Host $http_host;
+        proxy_pass http://localhost:{{ grafana_port }};
     }
     {% endif %}
 }
