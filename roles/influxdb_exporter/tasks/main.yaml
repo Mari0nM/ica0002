@@ -19,3 +19,4 @@
   ansible.builtin.service:
     name: prometheus-influxdb-stats-exporter
     state: started
+    enabled: true

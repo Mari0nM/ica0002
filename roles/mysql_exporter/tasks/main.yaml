@@ -1,12 +1,3 @@
-- name: Place my.cnf file
-  ansible.builtin.template:
-    src: my.cnf.j2
-    dest: /var/lib/prometheus/.my.cnf
-    owner: prometheus
-    mode: "0400"
-  notify: Restart mysql exporter
-  no_log: true
-
 - name: Install mysql exporter
   ansible.builtin.apt:
     name: prometheus-mysqld-exporter
@@ -17,6 +8,16 @@
     password: "{{ mysql_exporter_password }}"
     priv: "*.*:PROCESS,REPLICATION CLIENT,SELECT"
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
+  notify: Restart mysql exporter
+
+- name: Place my.cnf file
+  ansible.builtin.template:
+    src: my.cnf.j2
+    dest: /var/lib/prometheus/.my.cnf
+    owner: prometheus
+    mode: "0400"
+  notify: Restart mysql exporter
   no_log: true
 
 - name: Place Prometheus args file
